@@ -3,7 +3,7 @@ import { Switch } from "react-router-dom";
 import 'rsuite/dist/styles/rsuite-default.css';
 import PublicRoute from "./component/PublicRoute";
 import PrivateRoute from "./component/PrivateRoute";
-import Home from "./pages/Home";
+import Home from "./pages/home/Index";
 import SignIn from "./pages/SignIn";
 import "./styles/main.scss";
 import {ProfileProvider} from "./context/profile.context";
