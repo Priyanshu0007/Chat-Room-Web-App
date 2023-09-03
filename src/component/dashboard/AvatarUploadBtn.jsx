@@ -5,6 +5,7 @@ import { useModalState } from '../../misc/cutomhook';
 import { database, storage } from '../../misc/firebase';
 import { useProfile } from '../../context/profile.context';
 import ProfileAvatar from '../ProfileAvatar';
+import { getUserUpdates } from '../../misc/helper';
 
 const fileInputTypes = '.png, .jpeg, .jpg';
 
@@ -23,8 +24,8 @@ const getBlob = canvas => {
   };
 const AvatarUploadBtn = () => {
   const { isOpen, open, close } = useModalState();
-    const {profile}=useProfile();
-    const [isLoading,setIsLoading]=useState(false);
+  const {profile}=useProfile();
+  const [isLoading,setIsLoading]=useState(false);
   const [img, setImg] = useState(null);
   const avatarEditorRef=useRef();
   const onFileInputChange = ev => {
@@ -46,16 +47,29 @@ const AvatarUploadBtn = () => {
       const canvas=avatarEditorRef.current.getImageScaledToCanvas();
       setIsLoading(true);
       try {
-          const blob=await getBlob(canvas);
-          const avatarFileRef=storage.ref(`/profiles/${profile.uid}`).child("avatar");
-          const uploadAvatarResult=await avatarFileRef.put(blob,{
-              cacheControl:`public,max-age=${3600*24*3}`
-          });
-          const downloadUrl= await uploadAvatarResult.ref.getDownloadUrl();
-          const userAvatarRef=database.ref(`/profiles/${profile.uid}`).child("avatar");
-          await userAvatarRef.set(downloadUrl);
-          setIsLoading(false);
-          Alert.info("Avatar has been uploaded",4000);
+        const blob = await getBlob(canvas);
+
+        const avatarFileRef = storage
+          .ref(`/profile/${profile.uid}`)
+          .child('avatar');
+  
+        const uploadAvatarResult = await avatarFileRef.put(blob, {
+          cacheControl: `public, max-age=${3600 * 24 * 3}`,
+        });
+  
+        const downloadUrl = await uploadAvatarResult.ref.getDownloadURL();
+  
+        const updates = await getUserUpdates(
+          profile.uid,
+          'avatar',
+          downloadUrl,
+          database
+        );
+  
+        await database.ref().update(updates);
+  
+        setIsLoading(false);
+        Alert.info('Avatar has been uploaded', 4000);
       } catch (err) {
         setIsLoading(false);
           Alert.error(err.message,4000);
