@@ -6,6 +6,10 @@ export function getNameInitals(name){
     return splitName[0][0]
 }
 
+export function transformToArray(snapVal) {
+  return snapVal ?Object.keys(snapVal):[];
+}
+
 export function transformToArrayWithID(snapVal){
     return snapVal? Object.keys(snapVal).map(roomId=>{
         return {...snapVal[roomId],id:roomId}
@@ -40,4 +44,14 @@ export async function getUserUpdates(userId, keyToUpdate, value, db) {
     });
   
     return updates;
+  }
+  export function groupBy(array,groupingKeyFn) {
+    return array.reduce((result,item)=>{
+    const groupingKey =groupingKeyFn(item);
+    if (!result[groupingKey]) {
+      result[groupingKey]=[];
+    }
+    result[groupingKey].push(item);
+    return result;
+  },{})
   }

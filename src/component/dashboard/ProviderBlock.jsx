@@ -5,7 +5,7 @@ import firebase from 'firebase/app';
 const ProviderBlock = () => {
     const [isConnected,setIsConnected]=useState({
         "google.com":auth.currentUser.providerData.some((data)=>data.providerId==="google.com"),
-        "facebook.com":auth.currentUser.providerData.some((data)=>data.providerId==="facebook.com"),
+        "twitter.com":auth.currentUser.providerData.some((data)=>data.providerId==="twitter.com"),
     });
     const updateIsConnected=(providerId,value)=>{
         setIsConnected(p=>{
@@ -24,8 +24,8 @@ const ProviderBlock = () => {
             Alert.error(err.message,4000);
         }
     }
-    const unlinkFacebook=()=>{
-        unlink("facebook.com");
+    const unlinkTwitter=()=>{
+        unlink("twitter.com");
     }
     const unlinkGoogle=()=>{
         unlink("goole.com");
@@ -39,8 +39,8 @@ const ProviderBlock = () => {
             Alert.error(err.message,4000);
         }
     }
-    const linkFacebook=()=>{
-        link(new firebase.auth.FacebookAuthProvider());
+    const linkTwitter=()=>{
+        link(new firebase.auth.TwitterAuthProvider());
     }
     const linkGoogle=()=>{
         link(new firebase.auth.GoogleAuthProvider());
@@ -52,8 +52,8 @@ const ProviderBlock = () => {
                 <Icon icon="google" /> Connected
             </Tag>
         )}
-        {isConnected["facebook.com"]&&(
-            <Tag color="blue" closable onClose={unlinkFacebook}>
+        {isConnected["twitter.com"]&&(
+            <Tag color="blue" closable onClose={unlinkTwitter}>
                  <Icon icon="facebook" /> Connected
             </Tag>
         )}
@@ -63,9 +63,9 @@ const ProviderBlock = () => {
             <Icon icon="google" /> Link to Google
         </Button>
         )}
-        {!isConnected["facebook.com"]&&(
-        <Button block color='blue' onClick={linkFacebook}>
-            <Icon icon="facebook" /> Link to Facebook
+        {!isConnected["twitter.com"]&&(
+        <Button block color='blue' onClick={linkTwitter}>
+            <Icon icon="twitter" /> Link to Twitter
         </Button>
         )}
         </div>

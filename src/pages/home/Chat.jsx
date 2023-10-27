@@ -6,6 +6,8 @@ import { useParams } from 'react-router-dom'
 import { useRooms } from '../../context/room.context'
 import { Loader } from 'rsuite'
 import { CurrentRoomProvider } from '../../context/CurrentRoom.context'
+import { transformToArray } from '../../misc/helper'
+import { auth } from '../../misc/firebase'
 const Chat = () => {
     const {chatId}=useParams();
     const rooms=useRooms();
@@ -17,9 +19,13 @@ const Chat = () => {
         return <h6 className='text-center mt-page'>Chat {chatId} not found</h6>
     }
     const {name,description}=currentRooms;
+    const admins=transformToArray(currentRooms.admins);
+    const isAdmin=admins.includes(auth.currentUser.uid);
     const currentRoomData={
         name,
         description,
+        admins,
+        isAdmin,
     }
   return (
     <CurrentRoomProvider data={currentRoomData}>

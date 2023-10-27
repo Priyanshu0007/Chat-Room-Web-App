@@ -2,7 +2,6 @@ import React from 'react';
 import firebase from 'firebase/app';
 import { Container, Grid, Row, Panel, Col, Button, Icon, Alert } from 'rsuite';
 import { auth, database } from '../misc/firebase';
-
 const SignIn = () => {
   const signInWithProvider = async provider => {
     try {
@@ -17,7 +16,7 @@ const SignIn = () => {
 
       Alert.success('Signed in', 4000);
     } catch (err) {
-      Alert.error(err.message, 4000);
+      Alert.error(err.message, 9000);
     }
   };
 
@@ -25,7 +24,9 @@ const SignIn = () => {
   const onGoogleSignIn = () => {
     signInWithProvider(new firebase.auth.GoogleAuthProvider());
   };
-
+  const onTwitterSignIn = () => {
+    signInWithProvider(new firebase.auth.TwitterAuthProvider());
+  };
   return (
     <Container>
       <Grid className="mt-page">
@@ -39,6 +40,11 @@ const SignIn = () => {
               <div className="mt-3">
                 <Button block color="green" onClick={onGoogleSignIn}>
                   <Icon icon="google" /> Continue with Google
+                </Button>
+              </div>
+              <div className="mt-3">
+                <Button block color="blue" onClick={onTwitterSignIn}>
+                  <Icon icon="twitter" /> Continue with Twitter
                 </Button>
               </div>
             </Panel>

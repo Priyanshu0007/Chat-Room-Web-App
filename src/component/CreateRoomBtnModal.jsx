@@ -2,11 +2,11 @@ import React, { useCallback, useRef, useState } from 'react'
 import { Alert, Button, ControlLabel, Form, FormControl, FormGroup, Icon, Modal, Schema } from 'rsuite'
 import { useModalState } from '../misc/cutomhook'
 import firebase from 'firebase/app';
-import { database } from '../misc/firebase';
+import { auth, database } from '../misc/firebase';
  const {StringType}=Schema.Types;
 const model=Schema.Model({
     name:StringType().isRequired("Chat name is required"),
-    discription:StringType().isRequired("Discription name is required")
+    description:StringType().isRequired("Description name is required")
 });
 const INITIAL_FORM={
     name:"",
@@ -27,7 +27,10 @@ const CreateRoomBtnModal = () => {
         setIsLoading(true);
         const newRoomdata={
             ...formValue,
-            createdAt:firebase.database.ServerValue.TIMESTAMP
+            createdAt:firebase.database.ServerValue.TIMESTAMP,
+            admins:{
+                [auth.currentUser.uid]:true
+            }
         }
         try {
             await database.ref("rooms").push(newRoomdata);
@@ -54,8 +57,8 @@ const CreateRoomBtnModal = () => {
                         <FormControl name='name' placeholder="Enter chat room name..."></FormControl>
                     </FormGroup>
                     <FormGroup>
-                        <ControlLabel>Discription</ControlLabel>
-                        <FormControl componentClass="textarea" rows={5} name="discription" placeholder="Enter room discription..."></FormControl>
+                        <ControlLabel>Description</ControlLabel>
+                        <FormControl componentClass="textarea" rows={5} name="description" placeholder="Enter room description..."></FormControl>
                     </FormGroup>
                 </Form>
             </Modal.Body>
